@@ -1,25 +1,27 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class AnimalSpawner : MonoBehaviour {
 
-    public int totalAnimals = 1;
-    public Object animalToSpawn;
-
-    private void Start() {
-        for (int i = 0; i < totalAnimals; i++) {
-            spawnAnimalInRandomPosition();
+    private Camera mainCamera;
+    
+    public void Awake() {
+        mainCamera = Camera.main;
+    }
+    
+    public void spawnAnimals(Animal animal, int count) {
+        for (int i = 0; i < count; i++) {
+            float x = Random.Range(0, Screen.width - 128);
+            float y = Random.Range(0, Screen.height - 128);
+            Vector2 screenPoint = new Vector2(x, y);
+            Vector2 worldPoint = mainCamera.ScreenToWorldPoint(screenPoint);
+            spawnAnimal(animal, worldPoint);
         }
     }
+    private void spawnAnimal(Animal animal, Vector2 position) {
+        Vector3 position3D = position;
+        position3D.z = 1;
 
-    private void spawnAnimalInRandomPosition() {
-        float x = Random.Range(0, Screen.width - 128);
-        float y = Random.Range(0, Screen.height - 128);
-        float z = 1;
-
-        Vector3 position = Camera.main.ScreenToWorldPoint(new Vector3(x, y, z));
-        Instantiate(animalToSpawn, position, Quaternion.identity);
+        Instantiate(animal, position3D, Quaternion.identity);
     }
 
 }
