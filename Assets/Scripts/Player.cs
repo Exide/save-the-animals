@@ -9,17 +9,19 @@ public class Player : MonoBehaviour {
     private void Update() {
         float x = Input.GetAxisRaw("Horizontal");
         float y = Input.GetAxisRaw("Vertical");
-        Vector2 movement = new Vector2(x, y) * speed * Time.deltaTime;
-        transform.Translate(movement);
+        Vector2 direction = new Vector2(x, y);
+        float distance = speed * Time.deltaTime;
+        transform.Translate(direction * distance);
     }
 
     private void OnTriggerEnter2D(Collider2D other) {
-        Debug.Log("Player triggered by " + other.gameObject.name);
-        if (other.gameObject.name.StartsWith("Animal")) {
-            points++;
-            Animal animal = other.gameObject.GetComponent<Animal>();
-            animal.gather();
-        }
+        if (!other.gameObject.name.StartsWith("Animal")) return;
+
+        Animal animal = other.gameObject.GetComponent<Animal>();
+        // todo: get the point value from the animal
+        points += 1;
+        
+        animal.collect();
     }
 
 }

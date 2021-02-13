@@ -1,10 +1,26 @@
 using UnityEngine;
 
-public class Animal : MonoBehaviour
-{
+[RequireComponent(typeof(AudioSource))]
+[RequireComponent(typeof(SpriteRenderer))]
+[RequireComponent(typeof(Collider2D))]
+public class Animal : MonoBehaviour {
 
-    public void gather() {
-        Destroy(gameObject);
+    private AudioSource audioSource;
+    private SpriteRenderer spriteRenderer;
+    private Collider2D collider2d;
+
+    public void Awake() {
+        audioSource = GetComponent<AudioSource>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        collider2d = GetComponent<Collider2D>();
+    }
+    
+    public void collect() {
+        float destructionDelay = audioSource.clip.length + 0.1f;
+        audioSource.Play();
+        spriteRenderer.enabled = false;
+        collider2d.enabled = false;
+        Destroy(gameObject, destructionDelay);
     }
 
 }
